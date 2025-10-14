@@ -1,4 +1,3 @@
-// ...existing code...
 <!doctype html>
 <html lang="en">
 <head>
@@ -49,7 +48,8 @@
     section.panel:nth-child(4){ background: linear-gradient(180deg,#24132a 0%, #0b1b2b 100%); }
 
     .content{
-      max-width:960px;
+      width:100%;
+      max-width:1100px;
       text-align:center;
       background:rgba(255,255,255,0.03);
       padding:36px;
@@ -144,9 +144,82 @@
       margin-top:2px;
     }
 
+    /* Gallery grid */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+      margin-top:18px;
+    }
+    .gallery-grid img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      border-radius:10px;
+      display:block;
+      box-shadow:0 8px 30px rgba(2,6,23,0.6);
+      transition:transform .25s ease, box-shadow .25s ease;
+      cursor:zoom-in;
+      background:#09101a;
+    }
+    .gallery-grid img:hover{ transform:scale(1.03); box-shadow:0 16px 40px rgba(2,6,23,0.7); }
+
+    /* Features list */
+    .features{
+      display:flex;
+      gap:18px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .feature{
+      background:rgba(255,255,255,0.02);
+      padding:14px;
+      border-radius:10px;
+      min-width:220px;
+      text-align:left;
+      box-shadow:0 6px 20px rgba(2,6,23,0.5);
+    }
+    .feature h3{ margin:6px 0 6px 0; font-size:18px; }
+    .feature p{ margin:0; color:var(--muted); font-size:14px; }
+
+    /* Contact form */
+    .contact-grid{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:20px;
+      align-items:start;
+      margin-top:18px;
+    }
+    form.contact-form{ display:flex; flex-direction:column; gap:10px; }
+    input, textarea, button{
+      font-family:inherit;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.06);
+      padding:10px;
+      background:rgba(255,255,255,0.02);
+      color:inherit;
+      resize:vertical;
+    }
+    button[type="submit"]{
+      background:linear-gradient(90deg,var(--accent),#7c3aed);
+      color:#042027;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      padding:10px 14px;
+      border-radius:10px;
+    }
+
+    @media (max-width:900px){
+      .gallery-grid{ grid-template-columns: repeat(2, 1fr); }
+      .contact-grid{ grid-template-columns: 1fr; }
+    }
     @media (max-width:640px){
       nav.dots{ right:12px; gap:9px; }
       .content{ padding:20px; margin:0 6px; }
+      .gallery-grid img{ height:140px; }
+      .features{ gap:12px; }
     }
   </style>
 </head>
@@ -170,21 +243,73 @@
       <div class="content">
         <h1>Features</h1>
         <p class="lead">Scroll snapping, intersection-driven active state, progress bar, accessible dot navigation and keyboard control.</p>
+
+        <div class="features" aria-hidden="false">
+          <div class="feature" role="article">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2v20" stroke="#06b6d4" stroke-width="2" stroke-linecap="round"/><path d="M5 12h14" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/></svg>
+            <h3>Native scroll snap</h3>
+            <p>Uses CSS scroll-snap to lock viewport to full-screen sections for predictable navigation.</p>
+          </div>
+
+          <div class="feature" role="article">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="#06b6d4" stroke-width="2"/><path d="M8 12l2 2 4-4" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Accessible controls</h3>
+            <p>Dot navigation, keyboard shortcuts and semantic markup improve accessibility for keyboard and screen reader users.</p>
+          </div>
+
+          <div class="feature" role="article">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#06b6d4" stroke-width="2"/><path d="M8 20h8" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/></svg>
+            <h3>Progress & feedback</h3>
+            <p>Top progress bar shows how far you are through the document; sections highlight when in view.</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="panel" id="gallery">
       <div class="content">
         <h1>Gallery</h1>
-        <p class="lead">Add any content here — images, cards or interactive widgets. Sections stay full height for immersive layout.</p>
+        <p class="lead">A responsive gallery — images are hotlinked from a free placeholder CDN (picsum.photos) for demo purposes. Replace with your own CDN or Pinterest links as needed.</p>
+
+        <div class="gallery-grid" aria-live="polite">
+          <!-- Replace IDs / URLs with your own image CDN or Pinterest image URLs -->
+          <img loading="lazy" src="https://picsum.photos/id/1015/800/600" alt="Landscape 1">
+          <img loading="lazy" src="https://picsum.photos/id/1025/800/600" alt="Landscape 2">
+          <img loading="lazy" src="https://picsum.photos/id/1035/800/600" alt="Landscape 3">
+          <img loading="lazy" src="https://picsum.photos/id/1045/800/600" alt="Landscape 4">
+          <img loading="lazy" src="https://picsum.photos/id/1055/800/600" alt="Landscape 5">
+          <img loading="lazy" src="https://picsum.photos/id/1065/800/600" alt="Landscape 6">
+        </div>
+
+        <p class="lead" style="margin-top:14px; color:var(--muted); font-size:13px;">Tip: click an image to open the source in a new tab.</p>
       </div>
     </section>
 
     <section class="panel" id="contact">
       <div class="content">
         <h1>Contact</h1>
-        <p class="lead">Footer-like section with call to action.</p>
-        <a class="cta" href="mailto:hello@example.com">Get in touch</a>
+        <p class="lead">Get in touch or send quick feedback. The form composes an email via mailto: — replace with your server endpoint if you need real submissions.</p>
+
+        <div class="contact-grid">
+          <form class="contact-form" id="contactForm" aria-label="Contact form">
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+            <input id="email" name="email" type="email" placeholder="Your email" required>
+            <input id="subject" name="subject" type="text" placeholder="Subject" required>
+            <textarea id="message" name="message" rows="6" placeholder="Message" required></textarea>
+            <button type="submit">Send message</button>
+          </form>
+
+          <aside style="background:rgba(255,255,255,0.02); padding:16px; border-radius:10px;">
+            <h3>Contact info</h3>
+            <p class="lead" style="margin:6px 0 12px 0; color:var(--muted);">Email: <a href="mailto:hello@example.com" style="color:var(--accent); text-decoration:none;">hello@example.com</a></p>
+            <p style="color:var(--muted); font-size:14px; margin:0 0 8px 0;">Follow on socials:</p>
+            <p style="display:flex; gap:8px; margin:0;">
+              <a href="https://unsplash.com" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none;">Unsplash</a> ·
+              <a href="https://www.pexels.com" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none;">Pexels</a> ·
+              <a href="https://www.flickr.com" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none;">Flickr</a>
+            </p>
+          </aside>
+        </div>
       </div>
     </section>
   </main>
@@ -202,8 +327,9 @@
       // build dot buttons
       sections.forEach((sec, i) => {
         const btn = document.createElement('button');
-        btn.title = sec.id || ('Section ' + (i+1));
-        btn.setAttribute('aria-label', btn.title);
+        const title = sec.querySelector('h1')?.textContent?.trim() || sec.id || ('Section ' + (i+1));
+        btn.title = title;
+        btn.setAttribute('aria-label', title);
         btn.addEventListener('click', () => sec.scrollIntoView({behavior:'smooth'}));
         dots.appendChild(btn);
       });
@@ -237,6 +363,9 @@
       // Keyboard navigation: ArrowUp / ArrowDown / PageUp / PageDown / Home / End
       window.addEventListener('keydown', (ev) => {
         if (['ArrowUp','ArrowDown','PageUp','PageDown','Home','End'].includes(ev.key)) {
+          // ignore when focus is in a form field
+          const active = document.activeElement;
+          if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
           ev.preventDefault();
           const activeIndex = dotButtons.findIndex(b => b.classList.contains('active'));
           let targetIndex = activeIndex;
@@ -253,8 +382,27 @@
         const target = document.querySelector(location.hash);
         if(target) setTimeout(()=>target.scrollIntoView({behavior:'smooth'}), 50);
       }
+
+      // Open image source in new tab when clicked
+      document.querySelectorAll('.gallery-grid img').forEach(img => {
+        img.addEventListener('click', () => {
+          window.open(img.src, '_blank', 'noopener');
+        });
+      });
+
+      // contact form: compose mailto with form values (simple fallback)
+      const form = document.getElementById('contactForm');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = encodeURIComponent(form.name.value.trim());
+        const email = encodeURIComponent(form.email.value.trim());
+        const subject = encodeURIComponent(form.subject.value.trim());
+        const message = encodeURIComponent(`From: ${name} <${email}>\n\n` + form.message.value.trim());
+        const mailto = `mailto:hello@example.com?subject=${subject}&body=${message}`;
+        // open mail client
+        window.location.href = mailto;
+      });
     })();
   </script>
 </body>
 </html>
-// ...existing code...
