@@ -19,17 +19,19 @@
         font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         background: var(--bg);
         color: #e6eef6;
-        scroll-behavior: smooth;
+        /* keep page-level smooth, but primary scroller will manage behavior */
       }
 
       /* Container enables native scroll snap */
       main#scroller {
         height: 100vh;
         overflow-y: auto;
-        scroll-snap-type: y mandatory;
         -webkit-overflow-scrolling: touch;
-        padding-top: 56px;   /* space for sticky header */
-        padding-bottom: 44px;/* space for sticky footer */
+        /* use scroll-padding so anchors & scrollIntoView account for sticky header/footer */
+        scroll-padding-top: 56px;   /* space for sticky header */
+        scroll-padding-bottom: 44px;/* space for sticky footer */
+        scroll-behavior: smooth; /* smooth for user and programmatic scrolls */
+        /* initial snap controlled by JS */
       }
 
       section.panel {
@@ -42,6 +44,8 @@
         scroll-snap-align: start;
         position: relative;
         transition: background 300ms ease, transform 300ms ease;
+        /* ensure headings don't get hidden under sticky header on programmatic scroll */
+        scroll-margin-top: 56px;
       }
 
       /* Example visual styles for panels */
@@ -251,7 +255,7 @@
 
       /* Sticky footer */
       .site-footer {
-        {% comment %} position: ; {% endcomment %}
+        position: sticky;
         bottom: 0;
         z-index: 60;
         background: var(--glass);
@@ -455,6 +459,22 @@
 
         const sections = Array.from(scroller.querySelectorAll("section.panel"));
 
+        // helper: programmatic smooth scroll that temporarily disables native snap to avoid jump
+        let snapTimeout = null;
+        function scrollToSection(sec) {
+          if (!sec) return;
+          // clear any pending re-enable
+          if (snapTimeout) clearTimeout(snapTimeout);
+          // temporarily disable snapping
+          scroller.style.scrollSnapType = "none";
+          // perform smooth scroll, ensure block 'start' so scroll-margin-top works
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
+          // re-enable according to checkbox after animation finishes
+          snapTimeout = setTimeout(() => {
+            scroller.style.scrollSnapType = (snapToggle && snapToggle.checked) ? "y mandatory" : "none";
+          }, 550);
+        }
+
         // build dots
         dots.innerHTML = "";
         sections.forEach((sec) => {
@@ -465,7 +485,7 @@
             "Section";
           btn.title = title;
           btn.setAttribute("aria-label", title);
-          btn.addEventListener("click", () => sec.scrollIntoView({ behavior: "smooth" }));
+          btn.addEventListener("click", () => scrollToSection(sec));
           dots.appendChild(btn);
         });
         const dotButtons = Array.from(dots.children);
@@ -510,7 +530,7 @@
             if (ev.key === "ArrowUp"   || ev.key === "PageUp")   targetIndex = Math.max(0, idx - 1);
             if (ev.key === "Home") targetIndex = 0;
             if (ev.key === "End")  targetIndex = sections.length - 1;
-            sections[targetIndex].scrollIntoView({ behavior: "smooth" });
+            scrollToSection(sections[targetIndex]);
           }
         }
         window.addEventListener("keydown", onKey);
@@ -523,7 +543,7 @@
             const target = scroller.querySelector(hash);
             if (target) {
               e.preventDefault();
-              target.scrollIntoView({ behavior: "smooth" });
+              scrollToSection(target);
             }
           }
         }
@@ -540,7 +560,7 @@
         // handle hash on load
         if (location.hash) {
           const target = scroller.querySelector(location.hash);
-          if (target) setTimeout(() => target.scrollIntoView({ behavior: "smooth" }), 50);
+          if (target) setTimeout(() => scrollToSection(target), 50);
         }
 
         // contact form submit: try server email, fallback to mailto
@@ -571,7 +591,7 @@
                 "mailto:hello@example.com?subject=" +
                 encodeURIComponent(subject) +
                 "&body=" +
-                encodeURIComponent("From: " + name + " <" + email + ">" + "\\n\\n" + message);
+                encodeURIComponent("From: " + name + " <" + email + ">" + "\n\n" + message);
               window.location.href = mailto;
               return;
             }
@@ -582,7 +602,7 @@
               "mailto:hello@example.com?subject=" +
               encodeURIComponent(subject) +
               "&body=" +
-              encodeURIComponent("From: " + name + " <" + email + ">" + "\\n\\n" + message);
+              encodeURIComponent("From: " + name + " <" + email + ">" + "\n\n" + message);
             window.location.href = mailto;
           }
         }
