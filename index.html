@@ -475,7 +475,7 @@
           }, 550);
         }
 
-        // build dots
+        // build dot
         dots.innerHTML = "";
         sections.forEach((sec) => {
           const btn = document.createElement("button");
@@ -490,7 +490,7 @@
         });
         const dotButtons = Array.from(dots.children);
 
-        // observe active section
+        // observe active secton
         const obs = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -507,7 +507,7 @@
         );
         sections.forEach((s) => obs.observe(s));
 
-        // progress bar
+        // progres bar
         function updateProgress() {
           const total = scroller.scrollHeight - scroller.clientHeight;
           const pos = scroller.scrollTop;
